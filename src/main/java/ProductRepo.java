@@ -7,9 +7,6 @@ public class ProductRepo {
 
     public ProductRepo() {
         products = new ArrayList<>();
-        products.add(new Product("1", "Apfel"));
-        products.add(new Product("2", "Birne"));
-        products.add(new Product("3", "Banane"));
     }
 
     public List<Product> getProducts() {
@@ -37,5 +34,14 @@ public class ProductRepo {
                return;
            }
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Product product : products) {
+            stringBuilder.append(product);
+        }
+        return stringBuilder.toString();
     }
 }
