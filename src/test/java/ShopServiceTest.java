@@ -25,7 +25,7 @@ class ShopServiceTest {
     void addOrderTest_whenInvalidProductId_expectNull() {
         //GIVEN
         ShopService shopService = new ShopService();
-        List<String> productsIds = List.of("1", "2");
+        List<String> productsIds = List.of("1", "8");
 
         //WHEN
         Order actual = shopService.addOrder(productsIds);
@@ -35,17 +35,67 @@ class ShopServiceTest {
     }
 
     @Test
-    void getOrdersByStatus_returnsThreeOrders_WhenCalledWithThreeProducts() {
+    void changeOrderStatus_ShouldHaveOrderStatusProcessing_WhenOrderIsNewlyCreated() {
+        //GIVEN
+        ShopService shopService = new ShopService();
+
+        //WHEN
+        Order order = shopService.addOrder(List.of("1", "2"));
+
+        //THEN
+        OrderStatus expected = OrderStatus.PROCESSING;
+        OrderStatus actual = order.orderStatus();
+
+        assertEquals(expected, actual);
+
+
+    }
+
+    @Test
+    void changeOrderStatus_ShouldHaveOrderStatusCompleted_WhenOrderIsCompleted() {
+        //GIVEN
+        ShopService shopService = new ShopService();
+        Order order = shopService.addOrder(List.of("1","2"));
+
+        //WHEN
+        Order updatedOrder = shopService.changeOrderStatus(order.id(), OrderStatus.COMPLETED);
+
+        //THEN
+        OrderStatus actual = updatedOrder.orderStatus();
+        OrderStatus expected = OrderStatus.COMPLETED;
+
+        assertEquals(expected, actual);
+
+
+
+    }
+
+    @Test
+    void getOrdersByStatus_returnsAllNewlyCreatedOrders_WhenCalledWithProcessing() {
         //GIVEN
         ShopService shopService = new ShopService();
         Order order1 = shopService.addOrder(List.of("1", "2"));
         Order order2 = shopService.addOrder(List.of("1", "2"));
 
-
         //WHEN
         List<Order> orderInProcessing = shopService.getOrdersByStatus(OrderStatus.PROCESSING);
 
         //THEN
-        assertEquals(OrderStatus.PROCESSING, orderInProcessing);
+        assertTrue(orderInProcessing.containsAll(List.of(order1, order2)));
+    }
+
+    @Test
+    void getOrdersByStatus_returnsOnlyOneOrder_WhenCalledWithCompleted() {
+        //GIVEN
+        ShopService shopService = new ShopService();
+        Order order1 = shopService.addOrder(List.of("1", "2"));
+        Order order2 = shopService.addOrder(List.of("1", "2"));
+        Order updatedOrder = shopService.changeOrderStatus(order2.id(), OrderStatus.COMPLETED);
+
+        //WHEN
+        List<Order> orderInProcessing = shopService.getOrdersByStatus(OrderStatus.COMPLETED);
+
+        //THEN
+        assertTrue(orderInProcessing.contains(updatedOrder) && !(orderInProcessing.contains(order2)));
     }
 }

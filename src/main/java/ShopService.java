@@ -30,11 +30,18 @@ public class ShopService {
         return orders;
     }
 
-    public void changeOrderStatus(String id, OrderStatus orderStatus) {
+    public Order changeOrderStatus(String id, OrderStatus orderStatus) {
         Order order = orderRepo.getOrderById(id);
+        Order updatedOrder = null;
         try {
             orderRepo.removeOrder(id);
-            orderRepo.addOrder(new Order(order.id(), order.products(), orderStatus));
+            updatedOrder = new Order(order.id(), order.products(), orderStatus);
+            orderRepo.addOrder(updatedOrder);
+            return updatedOrder;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
+
     }
 }
