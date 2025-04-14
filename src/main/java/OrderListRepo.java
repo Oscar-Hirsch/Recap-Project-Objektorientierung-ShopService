@@ -30,4 +30,13 @@ public class OrderListRepo implements OrderRepo{
             }
         }
     }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Order order : orders) {
+            stringBuilder.append(order.toString());
+        }
+        return stringBuilder.toString();
+    }
 }

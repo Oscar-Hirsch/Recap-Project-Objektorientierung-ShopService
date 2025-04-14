@@ -1,17 +1,31 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ShopServiceTest {
 
+    private ShopService shopService;
+    private ProductRepo repo;
+
+    @BeforeEach
+    void setUp() {
+        repo = new ProductRepo();
+        repo.addProduct(new Product("1", "Apfel"));
+        repo.addProduct(new Product("2", "Birne"));
+        repo.addProduct(new Product("3", "Banane"));
+
+        shopService = new ShopService(repo, new OrderListRepo());
+    }
+
     @Test
     void addOrderTest() {
         //GIVEN
-        ShopService shopService = new ShopService();
         List<String> productsIds = List.of("1");
         Instant orderTime = Instant.now();
 
@@ -27,7 +41,7 @@ class ShopServiceTest {
     @Test
     void addOrderTest_whenInvalidProductId_expectNull() {
         //GIVEN
-        ShopService shopService = new ShopService();
+        ShopService shopService = new ShopService(new ProductRepo(), new OrderListRepo());
         List<String> productsIds = List.of("1", "8");
 
         //WHEN
@@ -39,9 +53,6 @@ class ShopServiceTest {
 
     @Test
     void changeOrderStatus_ShouldHaveOrderStatusProcessing_WhenOrderIsNewlyCreated() {
-        //GIVEN
-        ShopService shopService = new ShopService();
-
         //WHEN
         Order order = shopService.addOrder(List.of("1", "2"));
 
@@ -57,7 +68,6 @@ class ShopServiceTest {
     @Test
     void changeOrderStatus_ShouldHaveOrderStatusCompleted_WhenOrderIsCompleted() {
         //GIVEN
-        ShopService shopService = new ShopService();
         Order order = shopService.addOrder(List.of("1","2"));
 
         //WHEN
@@ -76,7 +86,6 @@ class ShopServiceTest {
     @Test
     void getOrdersByStatus_returnsAllNewlyCreatedOrders_WhenCalledWithProcessing() {
         //GIVEN
-        ShopService shopService = new ShopService();
         Order order1 = shopService.addOrder(List.of("1", "2"));
         Order order2 = shopService.addOrder(List.of("1", "2"));
 
@@ -90,7 +99,6 @@ class ShopServiceTest {
     @Test
     void getOrdersByStatus_returnsOnlyOneOrder_WhenCalledWithCompleted() {
         //GIVEN
-        ShopService shopService = new ShopService();
         Order order1 = shopService.addOrder(List.of("1", "2"));
         Order order2 = shopService.addOrder(List.of("1", "2"));
         Order updatedOrder = shopService.changeOrderStatus(order2.id(), OrderStatus.COMPLETED);
