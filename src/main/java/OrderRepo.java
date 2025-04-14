@@ -10,5 +10,4 @@ public interface OrderRepo {
 
     void removeOrder(String id);
 
-    void setOrderStatus(String id, OrderStatus orderStatus);
 }

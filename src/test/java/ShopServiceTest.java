@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.Test;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,12 +13,13 @@ class ShopServiceTest {
         //GIVEN
         ShopService shopService = new ShopService();
         List<String> productsIds = List.of("1");
+        Instant orderTime = Instant.now();
 
         //WHEN
         Order actual = shopService.addOrder(productsIds);
 
         //THEN
-        Order expected = new Order("-11", List.of(new Product("1", "Apfel")), OrderStatus.PROCESSING);
+        Order expected = new Order("-11", List.of(new Product("1", "Apfel")), OrderStatus.PROCESSING, orderTime);
         assertEquals(expected.products(), actual.products());
         assertNotNull(expected.id());
     }

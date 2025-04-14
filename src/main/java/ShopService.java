@@ -1,3 +1,7 @@
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +23,9 @@ public class ShopService {
             }
 
         }
-        Order newOrder = new Order(UUID.randomUUID().toString(), products, OrderStatus.PROCESSING);
+        Instant orderTime = Instant.now();
+
+        Order newOrder = new Order(UUID.randomUUID().toString(), products, OrderStatus.PROCESSING, orderTime);
         return orderRepo.addOrder(newOrder);
 
     }
