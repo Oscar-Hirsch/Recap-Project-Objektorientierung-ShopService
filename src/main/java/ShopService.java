@@ -10,18 +10,20 @@ public class ShopService {
     public Order addOrder(List<String> productIds) {
         List<Product> products = new ArrayList<>();
         for (String productId : productIds) {
-            Product productToOrder = productRepo.getProductById(productId).orElse(null);
-            if (productToOrder == null) {
+            try {
+                Product productToOrder = productRepo.getProductById(productId).orElseThrow(NullPointerException::new);
+                products.add(productToOrder);
+            } catch (NullPointerException n) {
                 System.out.println("Product mit der Id: " + productId + " konnte nicht bestellt werden!");
                 return null;
             }
-            products.add(productToOrder);
+
         }
-
         Order newOrder = new Order(UUID.randomUUID().toString(), products, OrderStatus.PROCESSING);
-
         return orderRepo.addOrder(newOrder);
+
     }
+
 
     public List<Order> getOrdersByStatus(OrderStatus statusToFilter) {
         List<Order> orders = orderRepo.getOrders().stream()
