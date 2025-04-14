@@ -34,10 +34,9 @@ public class ShopService {
 
     public Order changeOrderStatus(String id, OrderStatus orderStatus) {
         Order order = orderRepo.getOrderById(id);
-        Order updatedOrder = null;
+        Order updatedOrder = order.withOrderStatus(orderStatus);
         try {
             orderRepo.removeOrder(id);
-            updatedOrder = new Order(order.id(), order.products(), orderStatus);
             orderRepo.addOrder(updatedOrder);
             return updatedOrder;
         } catch (Exception e) {
