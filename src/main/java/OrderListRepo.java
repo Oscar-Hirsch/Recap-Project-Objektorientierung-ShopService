@@ -30,4 +30,10 @@ public class OrderListRepo implements OrderRepo{
             }
         }
     }
+
+    public void setOrderStatus(String id, OrderStatus orderStatus) {
+        Order order = getOrderById(id);
+        removeOrder(id);
+        addOrder(new Order(order.id(), order.products(), orderStatus));
+    }
 }
