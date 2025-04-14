@@ -109,4 +109,18 @@ class ShopServiceTest {
         //THEN
         assertTrue(orderInProcessing.contains(updatedOrder) && !(orderInProcessing.contains(order2)));
     }
+
+    @Test
+    void getOldestOrderPerStatus() {
+        //GIVEN
+        Order olderOrder = shopService.addOrder(List.of("1", "2"));
+        Order youngerOrder = shopService.addOrder(List.of("1", "2"));
+
+        //WHEN
+        Order actual = shopService.getOldestOrderPerStatus(OrderStatus.PROCESSING);
+        Order expected = olderOrder;
+
+        //THEN
+        assertEquals(expected, actual);
+    }
 }

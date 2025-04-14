@@ -18,5 +18,8 @@ public class Main {
 
         System.out.println(shopService.getOrdersByStatus(OrderStatus.PROCESSING));
 
+        Order oldestOrder = shopService.getOldestOrderPerStatus(OrderStatus.PROCESSING);
+        System.out.println(oldestOrder);
+
     }
 }

@@ -1,5 +1,7 @@
 import java.time.Instant;
 import lombok.*;
+
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -50,5 +52,21 @@ public class ShopService {
             return null;
         }
 
+    }
+
+    public Order getOldestOrderPerStatus(OrderStatus orderStatus) {
+        List<Order> orders = getOrdersByStatus(orderStatus);
+        Order oldestOrder = orders.getFirst();
+        try {
+            for (int i = 1; i < orders.size(); i++) {
+                if (ChronoUnit.MILLIS.between(orders.get(i).orderTime(), oldestOrder.orderTime()) > 0) {
+                    oldestOrder = orders.get(i);
+                }
+            }
+        } catch (NullPointerException n) {
+            System.out.println("No order found for status " + orderStatus);
+            return null;
+        }
+        return oldestOrder;
     }
 }
