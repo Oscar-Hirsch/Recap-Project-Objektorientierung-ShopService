@@ -40,6 +40,10 @@ public class ShopService {
         return orders;
     }
 
+    public List<Order> getAllOrders() {
+        return orderRepo.getOrders();
+    }
+
     public Order changeOrderStatus(String id, OrderStatus orderStatus) {
         Order order = orderRepo.getOrderById(id);
         Order updatedOrder = order.withOrderStatus(orderStatus);
@@ -51,7 +55,6 @@ public class ShopService {
             e.printStackTrace();
             return null;
         }
-
     }
 
     public Order getOldestOrderPerStatus(OrderStatus orderStatus) {
